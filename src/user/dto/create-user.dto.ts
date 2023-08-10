@@ -1,1 +1,9 @@
-export class CreateUserDto {}
+import { IsEmail, MinLength } from 'class-validator';
+
+export class CreateUserDto {
+  @IsEmail()
+  email: string;
+
+  @MinLength(6, { message: 'Passwoord must be more then 6 symbols' })
+  password: string;
+}
