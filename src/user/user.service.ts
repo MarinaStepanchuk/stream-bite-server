@@ -18,18 +18,39 @@ export class UserService {
       },
     });
 
-    if (existUser) throw new BadRequestException('This email already exist!');
+    if (existUser) {
+      throw new BadRequestException('This email already exists');
+    }
+
+    const existUserWithName = await this.userRepository.findOne({
+      where: {
+        name: createUserDto.name,
+      },
+    });
+
+    if (existUserWithName) {
+      throw new BadRequestException('User with this name already exists');
+    }
 
     const hash = await argon2.hash(createUserDto.password);
     const user = await this.userRepository.save({
       email: createUserDto.email,
+      name: createUserDto.name,
       password: hash,
     });
 
     return { user };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  // findOne(id: number) {
+  //   return `This action returns a #${id} user`;
+  // }
+
+  async findOne(email: string) {
+    return await this.userRepository.findOne({
+      where: {
+        email,
+      },
+    });
   }
 }
