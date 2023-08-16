@@ -15,7 +15,7 @@ export class Post {
   id: number;
 
   @Column()
-  video: string;
+  name: string;
 
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: 'user_id' })

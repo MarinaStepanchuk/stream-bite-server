@@ -1,3 +1,1 @@
-export class CreatePostDto {
-  video: string;
-}
+export class CreatePostDto {}
