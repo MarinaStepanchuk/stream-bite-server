@@ -1,33 +1,32 @@
-import { Post } from 'src/post/entities/post.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  email: string;
-
-  @Column()
   name: string;
 
-  @Column()
-  password: string;
-
-  @OneToMany(() => Post, (post) => post.user, { onDelete: 'CASCADE' })
-  posts: Post[];
+  @ManyToOne(() => User, (user) => user.posts)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column()
+  mime: string;
 }
