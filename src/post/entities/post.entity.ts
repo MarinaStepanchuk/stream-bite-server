@@ -26,4 +26,7 @@ export class Post {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column()
+  mime: string;
 }

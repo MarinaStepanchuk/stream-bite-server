@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,18 +12,35 @@ export class PostService {
   ) {}
 
   async create(file: Express.Multer.File, id: number) {
-    const name = this.fileService.createFile(file);
+    const name = this.fileService.createFile(file, id);
     const post = await this.postRepository.save({
       name,
+      mime: file.mimetype,
       user: {
         id,
       },
     });
     return post;
   }
-  // findAll() {
-  //   return `This action returns all post`;
-  // }
+
+  async findAll() {
+    const posts = await this.postRepository.find({
+      relations: {
+        user: true,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    return posts.map((post) => ({
+      id: post.id,
+      name: post.name,
+      createDate: post.createdAt,
+      userName: post.user.name,
+      userId: post.user.id,
+    }));
+  }
   // findOne(id: number) {
   //   return `This action returns a #${id} post`;
   // }

@@ -12,7 +12,6 @@ import {
   Req,
 } from '@nestjs/common';
 import { PostService } from './post.service';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
@@ -24,15 +23,13 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   create(@UploadedFile() file: Express.Multer.File, @Req() req) {
-    console.log(file);
-    console.log(req.id);
     return this.postService.create(file, +req.user.id);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.postService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.postService.findAll();
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
