@@ -11,10 +11,10 @@ const config = {
   username: `${process.env.POSTGRES_USER}`,
   password: `${process.env.POSTGRES_PASSWORD}`,
   database: `${process.env.POSTGRES_DB}`,
-  entities: [__dirname + '..' + '/**/*.entity{.js,.ts}'],
+  entities: [__dirname + '../**/*.entity{.js,.ts}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
   autoLoadEntities: true,
-  synchronize: false,
+  synchronize: true,
 };
 
 export default registerAs('typeorm', () => config);
