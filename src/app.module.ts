@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { FileModule } from './file/file.module';
 import typeorm from './config/typeorm';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import typeorm from './config/typeorm';
     AuthModule,
     PostModule,
     FileModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
