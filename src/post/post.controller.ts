@@ -10,6 +10,7 @@ import {
   UploadedFile,
   UseGuards,
   Req,
+  Body,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -22,8 +23,9 @@ export class PostController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  create(@UploadedFile() file: Express.Multer.File, @Req() req) {
-    return this.postService.create(file, +req.user.id);
+  create(@UploadedFile() file: Express.Multer.File, @Req() req, @Body() body) {
+    const tags = JSON.parse(body.tags);
+    return this.postService.create({ file, id: +req.user.id, tags });
   }
 
   @Get()
