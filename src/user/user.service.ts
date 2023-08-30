@@ -42,14 +42,23 @@ export class UserService {
     return { user };
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
-
-  async findOne(email: string) {
+  async findUserByEmail(email: string) {
     return await this.userRepository.findOne({
       where: {
         email,
+      },
+    });
+  }
+
+  async findUserById(id: number) {
+    return await this.userRepository.findOne({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
       },
     });
   }

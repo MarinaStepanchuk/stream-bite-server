@@ -7,6 +7,7 @@ import {
   Get,
   UseGuards,
   Req,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,5 +27,10 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   getProfile(@Req() req) {
     return req.user;
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.userService.findUserById(+id);
   }
 }
