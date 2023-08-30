@@ -9,6 +9,7 @@ import { PostModule } from './post/post.module';
 import { FileModule } from './file/file.module';
 import typeorm from './config/typeorm';
 import { TagModule } from './tag/tag.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TagModule } from './tag/tag.module';
     PostModule,
     FileModule,
     TagModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

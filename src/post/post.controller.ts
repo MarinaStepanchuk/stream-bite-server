@@ -11,17 +11,18 @@ import {
   UseGuards,
   Req,
   Body,
+  Param,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('post')
+@UseGuards(JwtAuthGuard)
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   create(@UploadedFile() file: Express.Multer.File, @Req() req, @Body() body) {
     const tags = JSON.parse(body.tags);
@@ -31,6 +32,11 @@ export class PostController {
   @Get()
   findAll() {
     return this.postService.findAll();
+  }
+
+  @Get('user/:userId')
+  findUserPosts(@Param('userId') userId: string) {
+    return this.postService.findAllUserPosts(+userId);
   }
 
   // @Get(':id')
