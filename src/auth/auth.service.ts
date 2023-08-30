@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne(email);
+    const user = await this.usersService.findUserByEmail(email);
 
     if (!user) {
       throw new BadRequestException('User or password is incorrect');

@@ -32,7 +32,6 @@ export class PostService {
         return await this.tagRepository.save({ text: tag });
       }),
     );
-    console.log(tagsArray);
     const newPost = await this.postRepository.save({
       name,
       mime: file.mimetype,
@@ -50,30 +49,49 @@ export class PostService {
         user: true,
         tags: true,
       },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        user: {
+          id: true,
+          name: true,
+          email: true,
+        },
+        tags: true,
+      },
       order: {
         createdAt: 'DESC',
       },
     });
 
-    const a = posts.map((post) => ({
-      id: post.id,
-      name: post.name,
-      createDate: post.createdAt,
-      userName: post.user.name,
-      userId: post.user.id,
-      tags: post.tags,
-    }));
-    console.log(a);
-
-    return a;
+    return posts;
   }
-  // findOne(id: number) {
-  //   return `This action returns a #${id} post`;
-  // }
-  // update(id: number, updatePostDto: UpdatePostDto) {
-  //   return `This action updates a #${id} post`;
-  // }
-  // remove(id: number) {
-  //   return `This action removes a #${id} post`;
-  // }
+
+  async findAllUserPosts(userId: number) {
+    const [posts, count] = await this.postRepository.findAndCount({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      relations: ['user', 'tags'],
+      select: {
+        user: {
+          id: true,
+          name: true,
+          email: true,
+        },
+        tags: true,
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    return { posts, count };
+  }
 }
