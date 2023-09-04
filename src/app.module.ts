@@ -10,6 +10,7 @@ import { FileModule } from './file/file.module';
 import typeorm from './config/typeorm';
 import { TagModule } from './tag/tag.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
     FileModule,
     TagModule,
     SubscriptionModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
