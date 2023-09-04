@@ -17,10 +17,6 @@ export class FileController {
       'Content-Type': mimeType,
       'Content-Disposition': `attachment; filename=${name}`,
     });
-
-    // const stream = createReadStream(
-    //   path.resolve(__dirname, '..', 'static', userId, name),
-    // );
     stream.pipe(res);
   }
 }
