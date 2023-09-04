@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileService } from '../file/file.service';
 import { Tag } from 'src/tag/entities/tag.entity';
+import { PostGateway } from './post.gateway';
 
 @Injectable()
 export class PostService {
@@ -11,6 +12,7 @@ export class PostService {
     private fileService: FileService,
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
+    private readonly postGateway: PostGateway,
   ) {}
 
   async create(data: {
@@ -19,7 +21,7 @@ export class PostService {
     tags: string[];
   }) {
     const { file, id, tags } = data;
-    const name = this.fileService.createFile(file, id);
+    const fileName = this.fileService.createFile(file, id);
     const tagsArray = await Promise.all(
       tags.map(async (tag) => {
         const existingTag = await this.tagRepository.findOne({
@@ -32,15 +34,38 @@ export class PostService {
         return await this.tagRepository.save({ text: tag });
       }),
     );
-    const newPost = await this.postRepository.save({
-      name,
+    await this.postRepository.save({
+      name: fileName,
       mime: file.mimetype,
       tags: tagsArray,
       user: {
         id,
       },
     });
-    return newPost;
+    const post = await this.postRepository.findOne({
+      where: {
+        name: fileName,
+      },
+      relations: {
+        user: true,
+        tags: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        user: {
+          id: true,
+          name: true,
+          email: true,
+        },
+        tags: true,
+      },
+    });
+
+    this.postGateway.updatePostList(post);
+
+    return post;
   }
 
   async findAll() {
